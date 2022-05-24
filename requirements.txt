@@ -1,5 +1,6 @@
 streamlit
 streamlit_webrtc
+opencv-python
 numpy
 easyocr
 opencv-python

@@ -22,15 +22,20 @@ video.set(cv2.CAP_PROP_FPS, frame_rate_new)
 ocr_instance = OCR_engine.my_ocr(lang_list=['en'])
 
 while run:
-    _,img = video.read()
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    ret,img = video.read()
 
-    img_copy = img.copy()
-    # OCR
-    result = ocr_instance.ocr_read(img=img_copy)
-    # Result 集計+ Box Plotting
-    img_return, _, _ = ocr_instance.draw_boxes(img=img, result=result)
+    if ret :
 
-    FRAME_WINDOW.image(img)
+
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        img_copy = img.copy()
+        # OCR
+        result = ocr_instance.ocr_read(img=img_copy)
+        # Result 集計+ Box Plotting
+        img_return, _, _ = ocr_instance.draw_boxes(img=img, result=result)
+
+        FRAME_WINDOW.image(img)
 else:
     st.write('Stopped')
