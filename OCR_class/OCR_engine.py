@@ -7,7 +7,7 @@ import math
 class my_ocr():
     def __init__(self, lang_list=['en', 'ja']):
         self.lang_list = lang_list
-        self.reader = easyocr.Reader(['en', 'ja'])
+        self.reader = easyocr.Reader(self.lang_list)
         self.font = cv2.FONT_HERSHEY_SIMPLEX
 
     def ocr_read(self, img):
@@ -38,6 +38,9 @@ class my_ocr():
     def draw_boxes(self, img, result):
         img_copy = img.copy()
 
+        center_list = []
+        text_list = []
+
         for detection in result:
 
             p0 = tuple((detection[0][0]))
@@ -46,9 +49,11 @@ class my_ocr():
             p3 = tuple((detection[0][3]))
             points = np.array([p0, p1, p2, p3], dtype=np.int32)
             text = detection[1]
+            text_list.append(text)
 
             #detect center, rotation_angle
             center, rot_ang = self._detect_rot_angle(img_copy, p0, p1, p2, p3)
+            center_list.append(center)
             conficence = round(detection[2],2)
 
             #Draw
@@ -57,7 +62,13 @@ class my_ocr():
             img = cv2.polylines(img, [points], True, (255, 0, 0), thickness=2)
             img = cv2.putText(img, text, (int(p0[0]), int(p0[1])), self.font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
-        return img
+        if center_list is None:
+
+            return img
+
+        else:
+
+            return img, center_list, text_list
 
 
 
